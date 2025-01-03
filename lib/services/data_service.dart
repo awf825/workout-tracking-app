@@ -101,6 +101,23 @@ class DataService {
     }
   }
 
+    Future<String?> addWeights(weights) async {
+    try {
+      final docRef = _db
+        .collection("weights")
+        .withConverter(
+          fromFirestore: Weights.fromFirestore,
+          toFirestore: (cardio, options) => cardio.toFirestore(),
+        )
+        .doc();
+      await docRef.set(weights);
+      return docRef.id;
+    } catch (e) {
+      print("<!!! -- Error writing payment doc: $e -- !!!>");
+      return null;
+    }
+  }
+
   // Future<List<Payment>> query(
   //   String ?paymentMethodId,
   //   String ?categoryId,

@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:workout_tracking_app/models/weights.dart';
 import 'package:workout_tracking_app/providers/weights_provider.dart';
 // import 'package:payment_tracking/widgets/edit_payment.dart';
-// import 'package:payment_tracking/widgets/new_payment.dart';
+import 'package:workout_tracking_app/widgets/new_weights.dart';
 
 // ignore: must_be_immutable
 class WeightsScreen extends ConsumerStatefulWidget {
@@ -26,19 +26,19 @@ class _WeightsScreenState extends ConsumerState<WeightsScreen> {
     super.initState();
   }
 
-  // void addWeights() async {
-  //   final newWorkout = await Navigator.of(context).push<Weights>(
-  //     MaterialPageRoute(
-  //       builder: (ctx) => const NewWeights(),
-  //     )
-  //   );
+  void addWeights() async {
+    final newWorkout = await Navigator.of(context).push<Weights>(
+      MaterialPageRoute(
+        builder: (ctx) => const NewWeights(),
+      )
+    );
 
-  //   if (newWorkout == null) {
-  //     return; 
-  //   }
+    if (newWorkout == null) {
+      return; 
+    }
 
-  //   ref.read(WeightsProvider.notifier).addWeightsWorkout(newWorkout);
-  // }
+    ref.read(weightsProvider.notifier).addWeightsWorkout(newWorkout);
+  }
 
   // void editWeights(Weights Weights) async {
   //   final updatedWeights = await Navigator.of(context).push<Weights>(
@@ -98,7 +98,7 @@ class _WeightsScreenState extends ConsumerState<WeightsScreen> {
         title: const Text('Weights Workouts'),
           leading: IconButton(
           icon: const Icon(Icons.add),
-          onPressed: () => print((ref.read(weightsProvider.notifier).getData()))
+          onPressed: addWeights,
         ),
       ),
       body: _localWeights.isNotEmpty ? 

@@ -20,11 +20,11 @@ class Weights extends AppModel {
   final String ?id;
   final Timestamp date;
   final String liftId;
-  num desiredRepsPerSet;
-  num minutesRest;
-  num sets;
-  num totalPounds;
-  num totalReps;
+  dynamic desiredRepsPerSet;
+  dynamic minutesRest;
+  dynamic sets;
+  dynamic totalPounds;
+  dynamic totalReps;
   bool completeBeforeExhaustion;
 
   String readDate() {
