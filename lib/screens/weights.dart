@@ -57,6 +57,7 @@ class _WeightsScreenState extends ConsumerState<WeightsScreen> {
   // }
 
   ExpansionTile _buildExpansionTile(Weights w) {
+    print(w.lift);
     final df = new DateFormat('yyyy-MM-dd');
     final GlobalKey expansionTileKey = GlobalKey();
     // final Weights Weights = _localWeights[index];
@@ -66,8 +67,7 @@ class _WeightsScreenState extends ConsumerState<WeightsScreen> {
       title: ListTile(
         // leading: Text(p.paymentMethod!.name),
         leading: Text(df.format(dt)),
-        // title: Text(p.recipient)
-        title: Text(w.liftId)
+        title: Text(w.lift!.name)
       ),
       
       // Text('My expansion tile $index'),

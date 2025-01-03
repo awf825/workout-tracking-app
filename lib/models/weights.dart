@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:workout_tracking_app/models/app_model.dart';
+import 'package:workout_tracking_app/models/lifts.dart';
 
 class Weights extends AppModel {
   Weights({
     this.id, 
+    this.lift,
     required this.date,
     required this.desiredRepsPerSet,
     required this.liftId,
@@ -19,16 +21,25 @@ class Weights extends AppModel {
 
   final String ?id;
   final Timestamp date;
-  final String liftId;
+  Lifts ?lift;
   dynamic desiredRepsPerSet;
   dynamic minutesRest;
   dynamic sets;
   dynamic totalPounds;
   dynamic totalReps;
+  dynamic liftId;
   bool completeBeforeExhaustion;
+
+  void setLift(liftToSet) {
+    lift = liftToSet;
+  }
 
   String readDate() {
     return DateFormat.yMMMd().add_jm().format(date.toDate());
+  }
+
+  Lifts? readLift() {
+    return lift;
   }
 
   factory Weights.fromFirestore(

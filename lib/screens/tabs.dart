@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:workout_tracking_app/models/lifts.dart';
 import 'package:workout_tracking_app/providers/Weights_provider.dart';
+import 'package:workout_tracking_app/providers/lifts_provider.dart';
 import 'package:workout_tracking_app/screens/cardio.dart';
 import 'package:workout_tracking_app/providers/cardio_provider.dart';
 import 'package:workout_tracking_app/models/cardio.dart';
@@ -42,11 +44,13 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
       Map<String, List<dynamic>> allData = await _dataService.loadAll();
       List<Cardio> _cardio = allData["cardio"] as List<Cardio>;
       List<Weights> _weights = allData["weights"] as List<Weights>;
+      List<Lifts> _lifts = allData["lifts"] as List<Lifts>;
 
       w = _weights;
 
       ref.read(cardioProvider.notifier).setData(_cardio);
       ref.read(weightsProvider.notifier).setData(_weights);
+      ref.read(liftsProvider.notifier).setData(_lifts);
     }
   }
   

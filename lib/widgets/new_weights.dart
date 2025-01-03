@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:workout_tracking_app/models/weights.dart';
+import 'package:workout_tracking_app/providers/lifts_provider.dart';
 // import 'package:workout_tracking_app/providers/Weights_method_provider.dart';
 import 'package:workout_tracking_app/services/data_service.dart';
 
@@ -19,7 +20,7 @@ class NewWeights extends ConsumerStatefulWidget {
 class _NewWeightsState extends ConsumerState<NewWeights> {
   final _formKey = GlobalKey<FormState>();
   final _dataService = DataService();
-  var _enteredLiftId = '';
+  var _enteredLift;
   var _enteredDesiredRepsPerSet = '';
   var _enteredMinutesRest = ''; 
   var _enteredSets = ''; 
@@ -37,7 +38,7 @@ class _NewWeightsState extends ConsumerState<NewWeights> {
       });
 
       final weights = Weights(
-        liftId: _enteredLiftId,
+        liftId: _enteredLift,
         desiredRepsPerSet: double.parse(_enteredDesiredRepsPerSet),
         minutesRest: double.parse(_enteredMinutesRest), 
         sets: double.parse(_enteredSets),
@@ -56,7 +57,7 @@ class _NewWeightsState extends ConsumerState<NewWeights> {
       Navigator.of(context).pop(
         Weights(
           id: newDocId, 
-          liftId: _enteredLiftId,
+          liftId: _enteredLift,
           desiredRepsPerSet: _enteredDesiredRepsPerSet,
           minutesRest: _enteredMinutesRest, 
           sets: _enteredSets,
@@ -71,6 +72,7 @@ class _NewWeightsState extends ConsumerState<NewWeights> {
 
   @override
   Widget build(BuildContext context) {
+    final lifts = ref.read(liftsProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add a new lifting exercise'),
@@ -86,16 +88,33 @@ class _NewWeightsState extends ConsumerState<NewWeights> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Expanded(
-                    child: TextFormField(
+                    child: DropdownButtonFormField(
                       decoration: const InputDecoration(
                         label: Text('Lift')
                       ),
-                      initialValue: _enteredLiftId,
-                      onSaved: (value) {
-                        _enteredLiftId = value!;
+                      value: _enteredLift,
+                      items: [
+                        // can't loop through a map (categories), need to specify categories.entries
+                        for (final method in lifts) 
+                          DropdownMenuItem(
+                            value: method.id,
+                            child: Row(
+                              children: [
+                                const SizedBox(width: 6),
+                                Text(method.name)
+                              ]
+                            )
+                          )
+                      ],
+                      onChanged: (value) {
+                        // need to use setState here because to display the _selectedCategory in the UI, we need 
+                        // to keep track of a local state. This is also why we don't need onSaved on this dropdown
+                        setState(() {
+                          _enteredLift = value!;
+                        });
                       },
                     ),
-                  ),
+                  )
                 ],
               ),
               const SizedBox(height: 12),

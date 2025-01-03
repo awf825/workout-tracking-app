@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:workout_tracking_app/models/cardio.dart';
+import 'package:workout_tracking_app/models/lifts.dart';
 import 'package:workout_tracking_app/models/weights.dart';
 // import 'package:payment_tracking/models/income_stream.dart';
 // import 'package:payment_tracking/models/payment_method.dart';
@@ -13,17 +14,19 @@ class DataService {
     try {
       List<Cardio> cardioData = await getCardioWorkouts();
       List<Weights> weightsData = await getWeightWorkouts();
+      List<Lifts> liftsData = await getLifts();
 
-      // for (var payment in paymentData) {
-      //   var categoryString = categoryData.firstWhere((cat) => cat.id == payment.categoryId);
-      //   payment.setCategory(categoryString);
-      //   var paymentMethodString = paymentMethodData.firstWhere((method) => method.id == payment.paymentMethodId);
-      //   payment.setPaymentMethod(paymentMethodString);
-      // }
+      for (var weights in weightsData) {
+        var lift = liftsData.firstWhere((l) => l.id == weights.liftId, orElse: () => Lifts(id: "0", name: "UNKNOWN"));
+        weights.setLift(lift);
+      }
+
+      print(weightsData);
 
       Map<String, List<dynamic>> allData = {
         "cardio": cardioData,
-        "weights": weightsData
+        "weights": weightsData,
+        "lifts": liftsData
       };
       return allData;
     } catch (e) {
@@ -79,6 +82,23 @@ class DataService {
         totalReps: data['totalReps']
       );
       out.add(weights);
+    }
+
+    return out;
+  }
+
+  Future<List<Lifts>> getLifts() async {
+    List<Lifts> out = [];
+    QuerySnapshot querySnapshot = await _db.collection('lifts').get();
+
+    for (var doc in querySnapshot.docs) {
+      final id = doc.id;
+      final data = doc.data() as Map;
+      Lifts lifts = Lifts(
+        id: id,
+        name: data['name']
+      );
+      out.add(lifts);
     }
 
     return out;
